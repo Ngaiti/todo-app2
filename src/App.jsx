@@ -5,6 +5,8 @@ import ErrorPage from "./pages/ErrorPage"
 import Home from "./pages/Home"
 import './App.css'
 import AddTodo from "./pages/AddTodo"
+import useLocalStorage from "use-local-storage"
+import { TodoContext } from "./contexts/ToDoContext"
 
 
 function Layout() {
@@ -24,16 +26,19 @@ function Layout() {
 }
 
 export default function App() {
+  const [todos, setTodos] = useLocalStorage("todos", [])
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Layout />}>
-          <Route index element={<Home />} />
-          <Route path="add" element={<AddTodo />} />
-          <Route path="*" element={<ErrorPage />} />
-        </Route>
-      </Routes>
-    </BrowserRouter>
+    <TodoContext.Provider value={{ todos, setTodos }}>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Layout />}>
+            <Route index element={<Home />} />
+            <Route path="add" element={<AddTodo />} />
+            <Route path="*" element={<ErrorPage />} />
+          </Route>
+        </Routes>
+      </BrowserRouter>
+    </TodoContext.Provider>
   )
 }
 
